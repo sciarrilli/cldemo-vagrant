@@ -292,7 +292,7 @@ Vagrant.configure("2") do |config|
       device.vm.provision :shell , inline: "sudo sed -i 's/sleep [0-9]*/sleep 1/' /etc/init/failsafe.conf"
 
       # link for eth1 --> oob-mgmt-switch:swp1
-      device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net54", auto_config: false , :mac => "44383900005F"
+      device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net54", auto_config: false
 
 
     device.vm.provider "virtualbox" do |vbox|
@@ -600,17 +600,6 @@ Vagrant.configure("2") do |config|
     device.vm.provision :shell , inline: "sudo apt-get install ansible -qy"
     device.vm.provision :shell , inline: "git clone https://github.com/sciarrilli/cldemo-provision "
     device.vm.provision :shell , inline: "ansible-playbook cldemo-provision/site.yml --extra-vars '#{extravars.to_json}'  --connection=local -i localhost,"
-
-
-      # Apply the interface re-map
-      device.vm.provision "file", source: "./helper_scripts/apply_udev.py", destination: "/home/vagrant/apply_udev.py"
-      device.vm.provision :shell , inline: "chmod 755 /home/vagrant/apply_udev.py"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900005F eth1"
-
-
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -vm -nv"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -s"
-      device.vm.provision :shell , :inline => $script
 
 
 
